@@ -1,0 +1,91 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "readsight"
+version = "1.0.0"
+description = "Multilingual readability library for Python — 86 languages, 17 formulas, TeX-based syllable counting via Frank M. Liang algorithm."
+readme = "README.md"
+license = {text = "MIT"}
+authors = [{name = "Yevhen Leonidov", email = "yevhen.leonidov@gmail.com"}]
+keywords = [
+    "readability", "syllable", "hyphenation", "flesch-kincaid",
+    "gunning-fog", "smog", "coleman-liau", "ari", "lix", "gulpease",
+    "wiener-sachtextformel", "multilingual", "tex", "liang"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Text Processing :: Linguistic",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "regex>=2023.0.0",
+    "platformdirs>=3.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/MADEVAL/ReadSightPy"
+Issues = "https://github.com/MADEVAL/ReadSightPy/issues"
+Source = "https://github.com/MADEVAL/ReadSightPy"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=4.0",
+    "mypy>=1.0",
+    "ruff>=0.1.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+readsight = ["data/languages/*.json", "data/patterns/*.tex"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E", "F", "I", "N", "W",
+    "UP", "B", "C4", "SIM",
+    "RUF",
+]
+ignore = ["RUF001"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+
+[tool.mypy]
+strict = true
+python_version = "3.10"
+exclude = ["tests/"]
+check_untyped_defs = true
+warn_unused_ignores = true
+disallow_any_generics = true
+disallow_subclassing_any = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+no_implicit_optional = true
+warn_return_any = true
