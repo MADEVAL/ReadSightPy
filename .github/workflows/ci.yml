@@ -25,12 +25,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install --upgrade pip
-          pip install ruff mypy pytest pytest-cov
-          pip install -e .
+          python -m pip install --upgrade pip
+          pip install ruff mypy pytest pytest-cov regex platformdirs
+          pip install -e . --no-deps
 
       - name: Lint (ruff)
-        run: ruff check src/ tests/ --isolated
+        run: ruff check src/ tests/
 
       - name: Type check (mypy)
         run: mypy src/
