@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "readsight"
-version = "1.0.3"
+version = "1.0.4"
 description = "Multilingual readability library for Python — 86 languages, 17 formulas, TeX-based syllable counting via Frank M. Liang algorithm."
 readme = "README.md"
 license = {text = "MIT"}
