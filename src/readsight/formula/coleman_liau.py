@@ -21,8 +21,8 @@ class ColemanLiau(Formula):
         word_count = stats.word_count if stats.word_count > 0 else 1
         sentence_count = stats.sentence_count if stats.sentence_count > 0 else 1
 
-        L = (stats.letter_count / word_count) * 100.0  # noqa: N806
-        S = (sentence_count / word_count) * 100.0  # noqa: N806
+        L = (stats.letter_count / word_count) * 100.0
+        S = (sentence_count / word_count) * 100.0
         score = 0.0588 * L - 0.296 * S - 15.8
 
         return FormulaResult(

@@ -18,7 +18,7 @@ class SzigrisztPazos(Formula):
 
     def calculate(self, stats: TextStatistics, language: Language) -> FormulaResult:
         word_count = stats.word_count if stats.word_count > 0 else 1
-        P = stats.average_words_per_sentence  # noqa: N806
+        P = stats.average_words_per_sentence
 
         syllables_per_word = stats.syllable_count / word_count
         syllables_per_100 = round(syllables_per_word * 100.0, 1)

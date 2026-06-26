@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 
-class ReadabilityEngineException(RuntimeError):  # noqa: N818
+class ReadabilityEngineException(RuntimeError):
     """Base exception for all readability engine errors."""
 
 
