@@ -50,7 +50,8 @@ rs = ReadSight("en-us")
 
 # Syllable counting
 rs.syllable_count("banana")         # 3
-rs.split_syllables("hyphenation")   # ['hy', 'phen', 'a', 'tion']
+rs.split_syllables("hyphenation")   # ['hyp', 'hen', 'ati', 'on']  (4 syllables, heuristic split)
+rs.split_word("hyphenation")        # ['hy', 'phen', 'a', 'tion']  (TeX hyphenation points)
 
 # Text analysis
 stats = rs.analyze("The quick brown fox jumps over the lazy dog.")
@@ -66,6 +67,36 @@ print(f"Gunning Fog: {fre.score} (grade {fre.grade_level})")
 lix = rs.lix(text)
 print(f"LIX: {fre.score} - {fre.interpretation}")
 ```
+
+## Syllable Counting Modes
+
+ReadSightPy has three syllable counting modes, configured per language via `syllableMode` in `data/languages/*.json`:
+
+| Mode | How it works | `count` accuracy | `split` accuracy |
+|------|-------------|:---:|:---:|
+| **`heuristic`** | Vowel patterns + word list + prefix/suffix rules | ✓ | ≈ approximate |
+| **`tex`** | Frank M. Liang hyphenation algorithm (TeX `.tex` patterns) | ✓ | ✓ exact |
+| **`composite`** | Heuristic first, TeX as fallback | ✓ | ≈ approximate (uses heuristic split) |
+
+**80 languages use `tex`**, **4 use `composite`** (en-us, en-gb, it, pl), **2 use `heuristic`**.
+
+### Example: "hyphenation" in each mode
+
+```python
+rs = ReadSight("en-us")   # composite mode — heuristic wins
+rs.syllable_count("hyphenation")   # 4 ✓ (in problemWords list)
+rs.split_syllables("hyphenation")  # ['hyp', 'hen', 'ati', 'on']   — heuristic: equal-width split, ≈ approximate
+rs.split_word("hyphenation")       # ['hy', 'phen', 'a', 'tion']   — TeX hyphenator: exact points
+
+rs = ReadSight("de-1996")  # tex mode
+rs.syllable_count("hyphenation")   # 4 ✓ (TeX patterns)
+rs.split_syllables("hyphenation")  # ['hy', 'phen', 'a', 'tion']   — TeX: exact
+rs.split_word("hyphenation")       # ['hy', 'phen', 'a', 'tion']   — same, both use TeX
+```
+
+> **Tip:** `split_word()` always uses the TeX hyphenator (exact). `split_syllables()` may use heuristic (approximate). For syllable *counts* both are correct.
+
+> **Note:** `add_hyphenations()` adds overrides to the TeX hyphenator. These affect `split_word()` but NOT `split_syllables()` in `composite`/`heuristic` modes (the heuristic counter doesn't see them).
 
 ## Demo
 
@@ -178,6 +209,8 @@ rs.histogram_syllables(text: str) -> dict[int, int]
 rs.analyze(text: str) -> TextStatistics
 ```
 
+> **split_syllables vs split_word:** `split_syllables` may use heuristic ≈approximate split (depends on language's `syllableMode`). `split_word` always uses the TeX hyphenator for exact hyphenation points. Syllable *counts* are accurate in all modes. See [Syllable Counting Modes](#syllable-counting-modes).
+
 #### Formula Methods
 
 ```python
@@ -233,10 +266,11 @@ rs = ReadSight(
     cache_dir="/custom/cache",
 )
 
-# Add custom hyphenation rules
+# Add custom hyphenation rules (affects split_word, not split_syllables)
 rs.add_hyphenations({
     "customword": "cus-tom-word",
 })
+rs.split_word("customword")  # ['cus', 'tom', 'word']
 ```
 
 ## Architecture

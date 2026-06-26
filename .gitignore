@@ -31,3 +31,4 @@ Thumbs.db
 # Project-specific
 /cache/
 *.log
+smoke_tests/
