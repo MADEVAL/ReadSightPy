@@ -26,7 +26,14 @@ jobs:
       - name: Install deps
         run: |
           python -m pip install --upgrade pip setuptools wheel
-          python -m pip install -e ".[dev]"
+          python -m pip install -e .
+          python -m pip install ruff mypy pytest pytest-cov
+
+      - name: Verify tools
+        run: |
+          ruff --version
+          mypy --version
+          pytest --version
 
       - name: Lint (ruff)
         run: ruff check src/ tests/
