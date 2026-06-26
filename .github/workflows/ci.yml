@@ -24,7 +24,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
-        run: pip install -e ".[dev]"
+        run: |
+          pip install --upgrade pip
+          pip install -e ".[dev]"
+          pip list | grep -E "ruff|mypy|pytest|readsight"
 
       - name: Check env
         continue-on-error: true
@@ -33,6 +36,9 @@ jobs:
           echo "Ruff: $(python -m ruff --version 2>&1)"
           echo "--- LINT OUTPUT ---"
           python -m ruff check src/ tests/ 2>&1 || true
+
+      - name: Lint (ruff)
+        run: python -m ruff check src/ tests/
 
       - name: Type check (mypy)
         run: mypy src/
