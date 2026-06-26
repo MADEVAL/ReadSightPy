@@ -13,6 +13,54 @@ ReadSightPy measures text readability across **86 languages** using **17 readabi
 
 This is a Python port of [ReadSight](https://github.com/MADEVAL/ReadSight) (PHP).
 
+## See It in Action
+
+Two texts of almost equal length — a plain sentence and a chunk of legal boilerplate:
+
+```python
+from readsight import ReadSight
+
+plain = "We made an app that reads your text. It tells you how easy it is to read. You get a score in one second."
+legal = "The parties acknowledge that any unauthorized disclosure of confidential information may cause irreparable harm. In such an event, the affected party shall be entitled to seek injunctive relief."
+```
+
+There is no "score everything" call — you loop over the formulas the language supports and call `score()` for each:
+
+```python
+rs = ReadSight("en-us")
+
+for formula in rs.get_supported_formulas():
+    result = rs.score(formula, legal)
+    # result.score, result.grade_level, result.interpretation
+    ...
+```
+
+For both texts that produces:
+
+```text
++---------------------------+-------------------------+----------------------------+
+| READABILITY FORMULA       | Plain text              | Legalese                   |
++---------------------------+-------------------------+----------------------------+
+| Flesch Reading Ease       | 107.1  Very Easy        | 23.4  Very Hard            |
+| Flesch-Kincaid Grade      | 0.3  g0.3  1st Grade    | 13.5  g13.5  College       |
+| Gunning Fog               | 3.2  g3.2  Very Easy    | 18.5  g18.5  Extremely Hard|
+| SMOG Index                | 3.1  g3.1  3rd Grade    | 15.2  g15.2  College       |
+| Coleman-Liau              | -0.4  g0.0  Kindergarten| 16.5  g16.5  Graduate      |
+| Automated Readability     | -2.1  g0.0  Kindergarten| 13.2  g13.2  College       |
+| LIX                       | 8.0  Children's Books   | 49.7  Factual Information  |
+| Dale-Chall                | 5.3  5th-6th grade      | 12.2  Graduate             |
+| Spache                    | 2.3  g2.3  2nd Grade    | 6.5  g5.0  Above 4th Grade |
++---------------------------+-------------------------+----------------------------+
+```
+
+All 9 formulas for `en-us` agree the second text is far harder. The bundled example prints this grid plus text metrics and a syllable histogram, for any text and language:
+
+```bash
+python examples/demo.py
+```
+
+**17 formulas, 86 languages, one consistent API.** Five of the formulas are truly universal — **Gunning Fog, SMOG, Coleman-Liau, ARI and LIX** score text in *every* one of the 86 languages. The remaining **12 are language-aware**, each carrying its own published coefficients: Flesch Reading Ease and Flesch-Kincaid span 12 languages, the Wiener Sachtextformel speaks German, Gulpease speaks Italian, OSMAN speaks Arabic, and the Fernández-Huerta · Szigriszt-Pazos · Gutiérrez-Polini · Crawford family handles Spanish. `get_supported_formulas()` hands each language exactly the slice that fits it — **9** formulas for `en-us`, **11** for `es`, **8** for `de-1996` — so an English-only metric never lands on a Thai sentence by mistake.
+
 ## Table of Contents
 
 - [Installation](#installation)
