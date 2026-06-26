@@ -26,19 +26,11 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install -e ".[dev]"
-          pip list | grep -E "ruff|mypy|pytest|readsight"
-
-      - name: Check env
-        continue-on-error: true
-        run: |
-          echo "Python: $(python --version 2>&1)"
-          echo "Ruff: $(python -m ruff --version 2>&1)"
-          echo "--- LINT OUTPUT ---"
-          python -m ruff check src/ tests/ 2>&1 || true
+          pip install ruff mypy pytest pytest-cov
+          pip install -e .
 
       - name: Lint (ruff)
-        run: python -m ruff check src/ tests/
+        run: ruff check src/ tests/
 
       - name: Type check (mypy)
         run: mypy src/
