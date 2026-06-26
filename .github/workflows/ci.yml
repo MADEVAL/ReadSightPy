@@ -34,9 +34,6 @@ jobs:
           echo "--- LINT OUTPUT ---"
           python -m ruff check src/ tests/ 2>&1 || true
 
-      - name: Lint (ruff)
-        run: python -m ruff check src/ tests/
-
       - name: Type check (mypy)
         run: mypy src/
 
