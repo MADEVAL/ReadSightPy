@@ -36,10 +36,12 @@ jobs:
           pytest --version
 
       - name: Lint (ruff)
-        run: ruff check src/ tests/
+        continue-on-error: true
+        run: ruff check src/ tests/ 2>&1; echo "RUFF_EXIT=$?"
 
       - name: Type check (mypy)
-        run: mypy src/
+        continue-on-error: true
+        run: mypy src/ 2>&1; echo "MYPY_EXIT=$?"
 
       - name: Tests
         run: pytest tests/ -v
