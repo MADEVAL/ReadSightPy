@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "readsight"
-version = "1.0.0"
+version = "1.0.3"
 description = "Multilingual readability library for Python — 86 languages, 17 formulas, TeX-based syllable counting via Frank M. Liang algorithm."
 readme = "README.md"
 license = {text = "MIT"}
-authors = [{name = "Yevhen Leonidov", email = "yevhen.leonidov@gmail.com"}]
+authors = [{name = "Yevhen Leonidov", email = "leonidovev@gmail.com"}]
 keywords = [
     "readability", "syllable", "hyphenation", "flesch-kincaid",
     "gunning-fog", "smog", "coleman-liau", "ari", "lix", "gulpease",
