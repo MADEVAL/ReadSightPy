@@ -8,8 +8,8 @@ on:
 
 jobs:
   check:
-    name: Python ${{ matrix.python-version }}
-    runs-on: ubuntu-22.04
+    name: Python ${{ matrix.python-version }} — Lint + Typecheck + Tests
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -23,11 +23,20 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install deps
-        run: |
-          python -m pip install --upgrade pip setuptools wheel
-          python -m pip install -e .
-          python -m pip install pytest pytest-cov
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
 
-      - name: Tests
+      - name: Lint (ruff)
+        run: ruff check src/ tests/
+
+      - name: Type check (mypy)
+        run: mypy src/
+
+      - name: Unit tests
+        run: pytest tests/unit -v
+
+      - name: Integration tests
+        run: pytest tests/integration -v
+
+      - name: Full test run
         run: pytest tests/ -v
