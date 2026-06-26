@@ -30,7 +30,10 @@ jobs:
           pip install -e .
 
       - name: Lint (ruff)
-        run: ruff check src/ tests/
+        run: |
+          which ruff
+          ruff --version
+          ruff check src/ tests/
 
       - name: Type check (mypy)
         run: mypy src/
